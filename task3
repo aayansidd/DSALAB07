@@ -1,0 +1,131 @@
+//Aayan Siddiqui 570014
+
+#include <iostream>
+using namespace std;
+
+struct ArrayQueue  {
+    int items[5];
+    int front = -1;
+    int rear = - 1;
+
+    void enqueue(int val) {
+        // Check if full FIRST
+        if (IsFull()) {
+            cout << "Queue is full\n";
+            return;
+        }
+
+        //Handle empty case
+        if (IsEmpty()) {
+            front = 0;
+            rear = 0;
+        }
+        // Handle wrap-around case
+        else {
+            rear = (rear + 1) % 5;
+        }
+
+        items[rear] = val;
+        cout << "Inserted: " << val << endl;
+    }
+
+    void dequeue() {
+        if (rear == -1 && front == -1) {
+            cout << "Queue empty";
+        } else if (rear == front){
+            int val = items[front];
+            rear = -1;
+            front = -1;
+            cout << "Value popped: " << val << endl;
+        } else {
+            int val = items[front];
+
+            front++;
+            if (front == 5) {
+                front = front % 5;
+            }
+            cout << "Value popped: " << val << endl;
+        }
+    }
+
+    void display() {
+        if (rear == -1 && front == -1) {
+            cout << "Queue empty" << endl;
+            return;
+        }
+
+        int curr = front;
+        while (true) {
+            cout << items[curr] << "->";
+
+            // Stop after we print the element at rear
+            if (curr == rear) {
+                break;
+            }
+
+            curr = (curr + 1) % 5; // Safe wrap-around
+        }
+        cout << "end" << endl;
+    }
+
+    void peekfront() {
+        if (front == -1) {
+            cout << "Queue empty" << endl;
+        } else {
+            cout << "Front value: " << items[front] << endl;
+        }
+    }
+
+    bool IsEmpty() {
+        if (rear == -1 && front == -1) {
+            cout << "Queue empty";
+            return true;
+        }
+        return false;
+    }
+
+    bool IsFull() {
+        return ((rear + 1) % 5 == front);
+    }
+};
+
+int main() {
+    ArrayQueue myQueue;
+
+    //Enqueue 10, 20, 30, 40, 50
+    myQueue.enqueue(10);
+    myQueue.enqueue(20);
+    myQueue.enqueue(30);
+    myQueue.enqueue(40);
+    myQueue.enqueue(50);
+
+    //Dequeue twice
+    myQueue.dequeue(); // Removes 10
+    myQueue.dequeue(); // Removes 20
+
+    //Enqueue 60 and 70 (wraps around)
+    myQueue.enqueue(60);
+    myQueue.enqueue(70);
+
+    // Display (should show 30, 40, 50, 60, 70 with front = 2, rear = 1)
+    myQueue.display();
+
+    // Reject another insertion (Queue is full)
+    myQueue.enqueue(80);
+
+    // Empty the queue completely (5 elements total)
+    myQueue.dequeue(); // Removes 30
+    myQueue.dequeue(); // Removes 40
+    myQueue.dequeue(); // Removes 50
+    myQueue.dequeue(); // Removes 60
+    myQueue.dequeue(); // Removes 70 (Queue is now completely empty: front/rear = -1)
+
+    // Test one further dequeue on the empty queue
+    myQueue.dequeue(); // Should print "Queue empty"
+
+    // Test insertion into an empty queue again
+    myQueue.enqueue(99);
+    myQueue.display();
+
+    return 0;
+}
