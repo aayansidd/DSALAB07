@@ -1,0 +1,169 @@
+#include <iostream>
+using namespace std;
+
+struct node {
+    int data;
+    node* next;
+    node* prev;
+};
+
+struct LinkedQueue {
+    node* head = nullptr;
+    node* curr = nullptr;
+    node* temp = nullptr;
+    node* tail = nullptr;
+
+    void insertRear(int val){
+        node* newnode = new node{val, nullptr, nullptr};
+
+        if (head == nullptr) {
+            head = newnode;
+            tail = head;
+        }else {
+            tail->next = newnode;
+            newnode->prev = tail;
+            tail = newnode;
+        }
+        cout << "Inserted " << val << " at rear.\n";
+    }
+
+    void insertFront(int val) {
+        node* newnode = new node{val, nullptr, nullptr};
+        if (head == nullptr) {
+            head = newnode;
+            tail = newnode;
+        } else {
+            head->prev = newnode;
+            newnode->next = head;
+            head = newnode;
+        }
+        cout << "Inserted " << val << " at front.\n";
+    }
+
+    void deleteFront() {
+        if (isEmpty()) {
+            cout << "Queue is empty (cannot delete from front)\n";
+            return;
+        }
+
+        node* temp = head;
+        cout << "Value removed from front: " << head->data << endl;
+
+        head = head->next;
+
+        if (head != nullptr) {
+            head->prev = nullptr;
+        } else {
+            tail = nullptr;
+        }
+
+        delete temp;
+    }
+
+    void deleteRear() {
+        if (isEmpty()) {
+            cout << "Queue is empty (cannot delete from rear)\n";
+            return;
+        }
+
+        node* temp = tail;
+        cout << "Value removed from rear: " << tail->data << endl;
+
+        tail = tail->prev;
+        if (tail != nullptr) {
+            tail->next = nullptr;
+        } else {
+            head = nullptr;
+        }
+        delete temp;
+    }
+
+    void peek() {
+        if (isEmpty()) {
+            cout << "Queue empty" << endl;
+        } else {
+            cout << "Value at Head: " << head->data << endl;
+        }
+    }
+
+    bool isEmpty() {
+        return (head == nullptr);
+    }
+
+    void display() {
+        if (isEmpty()) {
+            cout << "Queue empty" << endl;
+            return;
+        }
+
+        curr = head;
+        cout << "Deque: ";
+        while (curr != nullptr) {
+            cout << curr->data << "->";
+            curr = curr->next;
+        }
+        cout << "End" << endl;
+    }
+
+    //  ClearDeque to free all remaining nodes before exit
+    void ClearDeque() {
+        while (!isEmpty()) {
+            deleteFront();
+        }
+        cout << "Deque cleared successfully.\n";
+    }
+};
+
+int main() {
+    LinkedQueue myDeque;
+    int choice, val;
+
+    do {
+        cout << "\n--- Linked Deque Menu ---\n";
+        cout << "1. Insert Front\n";
+        cout << "2. Insert Rear\n";
+        cout << "3. Delete Front\n";
+        cout << "4. Delete Rear\n";
+        cout << "5. Display\n";
+        cout << "6. Exit\n";
+        cout << "Enter your choice: ";
+
+        // Handle invalid input type or menu choices
+        if (!(cin >> choice)) {
+            cout << "Invalid input! Please enter a number.\n";
+            cin.clear();
+            cin.ignore(10000, '\n');
+            continue;
+        }
+
+        switch (choice) {
+            case 1:
+                cout << "Enter value to insert at front: ";
+                cin >> val;
+                myDeque.insertFront(val);
+                break;
+            case 2:
+                cout << "Enter value to insert at rear: ";
+                cin >> val;
+                myDeque.insertRear(val);
+                break;
+            case 3:
+                myDeque.deleteFront();
+                break;
+            case 4:
+                myDeque.deleteRear();
+                break;
+            case 5:
+                myDeque.display();
+                break;
+            case 6:
+                cout << "Exiting program. Cleaning up memory...\n";
+                myDeque.ClearDeque();
+                break;
+            default:
+                cout << "Invalid choice! Please choose between 1 and 6.\n";
+        }
+    } while (choice != 6);
+
+    return 0;
+}
