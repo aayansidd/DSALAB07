@@ -1,0 +1,149 @@
+//Aayan Siddiqui 570014
+
+#include <iostream>
+using namespace std;
+
+struct ArrayDeque {
+    int items[5];
+    int front = -1;
+    int rear = -1;
+    int size = 5;
+
+    bool IsEmpty() {
+        return (rear == -1 && front == -1);
+    }
+
+    bool IsFull() {
+        return ((rear + 1) % size == front);
+    }
+
+    void insertRear(int val) {
+        if (IsFull()) {
+            cout << "Queue is full (Rejected: " << val << ")\n";
+            return;
+        }
+
+        if (IsEmpty()) {
+            front = 0;
+            rear = 0;
+        } else {
+            rear = (rear + 1) % size;
+        }
+
+        items[rear] = val;
+        cout << "Inserted " << val << " at rear\n";
+    }
+
+    void insertFront(int val) {
+        if (IsFull()) {
+            cout << "Queue is full (Rejected: " << val << ")\n";
+            return;
+        }
+
+        if (IsEmpty()) {
+            front = 0;
+            rear = 0;
+        } else {
+            // Move front backwards circularly
+            front = (front - 1 + size) % size;
+        }
+
+        items[front] = val;
+        cout << "Inserted " << val << " at front\n";
+    }
+
+    void deleteFront() {
+        if (IsEmpty()) {
+            cout << "Queue empty\n";
+            return;
+        }
+
+        int val = items[front];
+        if (rear == front) {
+            rear = -1;
+            front = -1;
+        } else {
+            front = (front + 1) % size;
+        }
+        cout << "Deleted from front: " << val << endl;
+    }
+
+    void deleteRear() {
+        if (IsEmpty()) {
+            cout << "Queue empty\n";
+            return;
+        }
+
+        int val = items[rear];
+        if (rear == front) {
+            rear = -1;
+            front = -1;
+        } else {
+            // Move rear backwards circularly
+            rear = (rear - 1 + size) % size;
+        }
+        cout << "Deleted from rear: " << val << endl;
+    }
+
+    void display() {
+        if (IsEmpty()) {
+            cout << "Queue empty" << endl;
+            return;
+        }
+
+        cout << "Queue: ";
+        int curr = front;
+        while (true) {
+            cout << items[curr] << "->";
+            if (curr == rear) {
+                break;
+            }
+            curr = (curr + 1) % size;
+        }
+        cout << "end" << endl;
+    }
+};
+
+int main() {
+    ArrayDeque dq;
+
+    // From empty, insert 20 at rear, 10 at front, and 30 at rear: expect 10, 20, 30
+    cout << "--- Test Sequence 1 ---" << endl;
+    dq.insertRear(20);
+    dq.insertFront(10);
+    dq.insertRear(30);
+    dq.display(); // Should show 10->20->30->end
+
+    // Delete from rear, then front: expect 20
+    cout << "\n--- Test Sequence 2 ---" << endl;
+    dq.deleteRear();  // Removes 30
+    dq.deleteFront(); // Removes 10
+    dq.display();     // Should show just 20->end
+
+    // Clear queue for the next sequence
+    dq.deleteFront();
+
+    // Insert 5 at front, 30 and 40 at rear, then 1 at front: expect 1, 5, 20, 30, 40
+    cout << "\n Test Sequence 3" << endl;
+    dq.insertFront(5);
+    dq.insertRear(30);
+    dq.insertRear(40);
+    dq.insertFront(1);
+
+    dq.insertRear(20); // making sure 20 is in place
+    dq.display();
+
+    // Reject further insertion at either end
+    cout << "\nTest Rejection" << endl;
+    dq.insertFront(99);
+    dq.insertRear(88);
+
+    // Test deletion of the only value from each end in separate runs, followed by deletion from empty
+    cout << "\n--- Test Emptying" << endl;
+    ArrayDeque testRun1;
+    testRun1.insertRear(100);
+    testRun1.deleteFront();
+    testRun1.deleteFront(); // Deletion from empty
+
+    return 0;
+}
