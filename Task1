@@ -1,0 +1,100 @@
+//Aayan Siddiqui 570014
+
+#include <iostream>
+using namespace std;
+
+struct ArrayQueue  {
+    int items[5];
+    int front = -1;
+    int rear = - 1;
+
+    void enqueue(int val) {
+        if (rear == -1 && front == -1) {
+            front = 0;
+            rear = 0;
+            items[rear] = val;
+        } else if (rear < 4) {
+            rear++;
+            items[rear] = val;
+        } else {
+            cout << "Queue full" << endl;
+        }
+    }
+
+    void dequeue() {
+        if (rear == -1 && front == -1) {
+            cout << "Queue empty";
+        } else if (rear == front){
+            int val = items[front];
+            rear = -1;
+            front = -1;
+            cout << "Value popped: " << val << endl;
+        } else {
+            int val = items[front];
+            front++;
+            cout << "Value popped: " << val << endl;
+        }
+    }
+
+    void display() {
+        if (rear == -1 && front == -1) {
+            cout << "Queue empty" << endl;
+            return;
+        }
+
+        int curr = front;
+
+
+        while (curr <= rear) {
+            cout << items[curr] << "->";
+            curr++;
+        }
+        cout << "end" << endl;
+    }
+
+    void peekfront() {
+        if (front == -1) {
+            cout << "Queue empty" << endl;
+        } else {
+            cout << "Front value: " << items[front] << endl;
+        }
+    }
+
+    bool IsEmpty() {
+        if (rear == -1 && front == -1) {
+            cout << "Queue empty";
+            return true;
+        }
+        return false;
+    }
+
+    bool IsFull() {
+        if (rear == -1 && front == -1) {
+            return false;
+        } else if (rear < 4) {
+            return false;
+        } else {
+            cout << "Queue full" << endl;
+            return true;
+        }
+    }
+};
+
+int main() {
+    ArrayQueue  myQueue;
+
+    myQueue.enqueue(10);
+    myQueue.enqueue(20);
+    myQueue.enqueue(30);
+    myQueue.enqueue(40);
+    myQueue.enqueue(50);
+    myQueue.dequeue();
+    myQueue.dequeue();
+    myQueue.enqueue(60);
+    myQueue.display();
+    myQueue.dequeue();
+    myQueue.dequeue();
+    myQueue.dequeue();
+    myQueue.dequeue();
+    myQueue.enqueue(70);
+}
